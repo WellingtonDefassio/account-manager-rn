@@ -1,21 +1,37 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {StatusBar} from 'expo-status-bar';
+import {NavigationContainer} from "@react-navigation/native";
+import {createNativeStackNavigator} from "@react-navigation/native-stack"
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import ManageExpenses from "./src/screens/ManageExpenses";
+import RecentExpense from "./src/screens/RecentExpense";
+import AllExpenses from "./src/screens/AllExpenses";
+
+const Stack = createNativeStackNavigator()
+const BottomTabs = createBottomTabNavigator()
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+    function ExpensesOverview() {
+        return (
+            <BottomTabs.Navigator>
+                <BottomTabs.Screen name={"RecentExpenses"} component={RecentExpense}/>
+                <BottomTabs.Screen name={"AllExpenses"} component={AllExpenses}/>
+            </BottomTabs.Navigator>
+        )
+    }
+
+
+    return (
+        <>
+            <StatusBar style="auto"/>
+            <NavigationContainer>
+                <Stack.Navigator>
+                    <Stack.Screen name={"ExpensesOverview"} component={ExpensesOverview}/>
+                    <Stack.Screen name={"ManageExpense"} component={ManageExpenses}/>
+                </Stack.Navigator>
+            </NavigationContainer>
+        </>
+    );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
