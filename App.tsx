@@ -67,6 +67,3 @@ const bottomNavStyles: Record<string, BottomTabNavigationOptions> = {
 
 }
 
-const styles = StyleSheet.create({
-    azul: {}
-})
