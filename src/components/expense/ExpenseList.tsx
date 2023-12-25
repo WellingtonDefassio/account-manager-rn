@@ -1,6 +1,7 @@
 import React from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {FlatList} from 'react-native';
 import {ExpenseType} from "./ExpenseOutput";
+import ExpenseItem from "./ExpenseItem";
 
 interface ExpenseListProps {
     expenses: ExpenseType[]
@@ -11,7 +12,7 @@ export default function ExpenseList(props: ExpenseListProps) {
 
     function renderExpenseItem(item: ExpenseType) {
         return (
-            <Text>{item.description}</Text>
+            <ExpenseItem expense={item} />
         )
     }
 

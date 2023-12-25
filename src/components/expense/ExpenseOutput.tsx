@@ -43,6 +43,36 @@ const DUMMY_EXPENSES: ExpenseType[] = [
         amount: 3000.00,
         date: new Date('2023-12-14')
     },
+    {
+        id: 'e6',
+        description: 'A pair of shoes',
+        amount: 59.99,
+        date: new Date('2023-12-19')
+    },
+    {
+        id: 'e7',
+        description: 'A pair of trousers',
+        amount: 89.29,
+        date: new Date('2023-12-05')
+    },
+    {
+        id: 'e8',
+        description: 'Some bananas',
+        amount: 5.00,
+        date: new Date('2023-12-19')
+    },
+    {
+        id: 'e9',
+        description: 'A guitar',
+        amount: 299.99,
+        date: new Date('2023-12-25')
+    },
+    {
+        id: 'e10',
+        description: 'Macbook',
+        amount: 3000.00,
+        date: new Date('2023-12-14')
+    },
 ]
 
 
@@ -63,7 +93,7 @@ export default function ExpenseOutput(props: ExpenseOutputProps) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 24,
+        paddingHorizontal: 24,
         backgroundColor: GlobalStyles.colors.primary700
     }
 })
