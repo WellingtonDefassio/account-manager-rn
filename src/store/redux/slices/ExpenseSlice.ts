@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "../store";
 
 export type ExpenseType = {
@@ -7,7 +7,11 @@ export type ExpenseType = {
     amount: number,
     date: Date
 }
-
+export type ExpenseCreateType = {
+    description: string,
+    amount: number,
+    date: Date
+}
 
 const DUMMY_EXPENSES: ExpenseType[] = [
     {
@@ -77,8 +81,29 @@ const initialState: ExpenseType[] = DUMMY_EXPENSES
 const expenseSlice = createSlice({
     name: "expense",
     initialState,
-    reducers: {}
+    reducers: {
+        addExpense: (state, action: PayloadAction<ExpenseCreateType>) => {
+            const id = new Date().toString() + Math.random().toString()
+            const newExpense: ExpenseType = {
+                id,
+                ...action.payload
+            }
+            state.push(...state, newExpense)
+        },
+        deleteExpense: (state, action: PayloadAction<{ id: string }>) => {
+            state.filter(expense => expense.id !== action.payload.id)
+        },
+        updateExpense: (state, action: PayloadAction<ExpenseType>) => {
+            state.map(expense => {
+                if (expense.id === action.payload.id) {
+                    return action.payload
+                }
+                return expense
+            })
+        }
+    }
 });
 
+export const expenseActions = expenseSlice.actions
 export const selectedExpenses = (state: RootState) => state.expense
 export default expenseSlice.reducer

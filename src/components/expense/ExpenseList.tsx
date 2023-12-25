@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList} from 'react-native';
-import {ExpenseType} from "./ExpenseOutput";
 import ExpenseItem from "./ExpenseItem";
+import {ExpenseType} from "../../store/redux/slices/ExpenseSlice";
 
 interface ExpenseListProps {
     expenses: ExpenseType[]

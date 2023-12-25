@@ -1,11 +1,11 @@
-import React, {useEffect, useLayoutEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {ExpenseType} from "../components/expense/ExpenseOutput";
+import React, {useLayoutEffect} from 'react';
+import {StyleSheet, View} from 'react-native';
 import IconButton from "../components/ui/IconButton";
 import {GlobalStyles} from "../constants/colors";
 import ButtonCustom from "../components/ui/ButtonCustom";
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {NavigationProp, ParamListBase} from "@react-navigation/native";
+import {useDispatch} from "react-redux";
+import {expenseActions} from "../store/redux/slices/ExpenseSlice";
 
 
 interface ManageExpensesProps {
@@ -18,6 +18,8 @@ export default function ManageExpenses(props: ManageExpensesProps) {
     const expenseId = props.route.params?.expenseId;
     const isEditing = !!expenseId
 
+    const dispatch = useDispatch()
+
     useLayoutEffect(() => {
         props.navigation.setOptions({
             title: isEditing ? "Edit Expense" : "Add Expense"
@@ -25,13 +27,14 @@ export default function ManageExpenses(props: ManageExpensesProps) {
     }, [props.navigation, isEditing]);
 
     function deleteExpenseHandler() {
-        console.log("DELETE!")
+        dispatch(expenseActions.deleteExpense(expenseId))
         props.navigation.goBack()
     }
 
     function cancelExpenseHandler() {
         props.navigation.goBack()
     }
+
     function confirmExpenseHandler() {
 
         console.log("Confirm!!")

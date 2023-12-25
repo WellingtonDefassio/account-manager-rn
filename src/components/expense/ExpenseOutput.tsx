@@ -6,9 +6,6 @@ import {GlobalStyles} from "../../constants/colors";
 import {ExpenseType, selectedExpenses} from "../../store/redux/slices/ExpenseSlice";
 import {useAppSelector} from "../../store/redux/hooks";
 
-
-
-
 interface ExpenseOutputProps {
     expenses: ExpenseType[]
     periodName: string
@@ -16,12 +13,12 @@ interface ExpenseOutputProps {
 
 export default function ExpenseOutput(props: ExpenseOutputProps) {
 
-    const expensesSelected = useAppSelector(selectedExpenses);
+
 
     return (
         <View style={styles.container}>
-            <ExpenseSummary expenses={expensesSelected} periodName={props.periodName}/>
-            <ExpenseList expenses={expensesSelected}/>
+            <ExpenseSummary expenses={props.expenses} periodName={props.periodName}/>
+            <ExpenseList expenses={props.expenses}/>
         </View>
     );
 }
