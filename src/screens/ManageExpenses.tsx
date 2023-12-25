@@ -9,8 +9,7 @@ import {NavigationProp, ParamListBase} from "@react-navigation/native";
 
 
 interface ManageExpensesProps {
-    expenseId: string
-    route: { params: { expenseId: string } }
+    route: any
     navigation: NavigationProp<ParamListBase>
 }
 

@@ -9,6 +9,8 @@ import AllExpenses from "./src/screens/AllExpenses";
 import {GlobalStyles} from "./src/constants/colors";
 import {Ionicons} from "@expo/vector-icons"
 import IconButton from "./src/components/ui/IconButton";
+import {Provider} from "react-redux";
+import {store} from "./src/store/redux/store";
 
 const Stack = createNativeStackNavigator()
 const BottomTabs = createBottomTabNavigator()
@@ -34,21 +36,23 @@ export default function App() {
 
     return (
         <>
-            <StatusBar style="light"/>
-            <NavigationContainer>
-                <Stack.Navigator screenOptions={stackNavStyles.navContainerOptions}>
-                    <Stack.Screen
-                        name={"ExpensesOverview"}
-                        component={ExpensesOverview}
-                        options={stackNavStyles.expenseOverView}
-                    />
-                    <Stack.Screen
-                        name={"ManageExpense"}
-                        component={ManageExpenses}
-                        options={stackNavStyles.manageExpense}
-                    />
-                </Stack.Navigator>
-            </NavigationContainer>
+            <Provider store={store}>
+                <StatusBar style="light"/>
+                <NavigationContainer>
+                    <Stack.Navigator screenOptions={stackNavStyles.navContainerOptions}>
+                        <Stack.Screen
+                            name={"ExpensesOverview"}
+                            component={ExpensesOverview}
+                            options={stackNavStyles.expenseOverView}
+                        />
+                        <Stack.Screen
+                            name={"ManageExpense"}
+                            component={ManageExpenses}
+                            options={stackNavStyles.manageExpense}
+                        />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </Provider>
         </>
     );
 }
