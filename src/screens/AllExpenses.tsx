@@ -6,9 +6,13 @@ import {selectedExpenses} from "../store/redux/slices/ExpenseSlice";
 
 export default function AllExpenses() {
 
-  const expensesSelected = useAppSelector(selectedExpenses);
+    const expensesSelected = useAppSelector(selectedExpenses);
 
-  return (
-   <ExpenseOutput expenses={expensesSelected} periodName={"Total"} />
-  );
+    return (
+        <ExpenseOutput
+            expenses={expensesSelected}
+            periodName={"Total"}
+            fallbackText={"No registered expenses found!"}
+        />
+    );
 }

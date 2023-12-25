@@ -12,11 +12,16 @@ export default function RecentExpense() {
     const today = new Date();
 
     const recentExpenses = expensesSelected.filter((expense) => {
+        const expenseDate = new Date(expense.date);
         const days7DaysAgo = getDateMinusDays(today, 7)
-        return new Date(expense.date) > days7DaysAgo
+        return (expenseDate > days7DaysAgo) && (expenseDate <= today)
     });
 
     return (
-        <ExpenseOutput expenses={recentExpenses} periodName={"Last 7 Days"}/>
+        <ExpenseOutput
+            expenses={recentExpenses}
+            periodName={"Last 7 Days"}
+            fallbackText={"No expenses registered for the last 7 days."}
+        />
     );
 }
