@@ -6,9 +6,9 @@ import {BottomTabNavigationOptions, createBottomTabNavigator} from "@react-navig
 import ManageExpenses from "./src/screens/ManageExpenses";
 import RecentExpense from "./src/screens/RecentExpense";
 import AllExpenses from "./src/screens/AllExpenses";
-import {StyleSheet} from "react-native";
 import {GlobalStyles} from "./src/constants/colors";
 import {Ionicons} from "@expo/vector-icons"
+import IconButton from "./src/components/ui/IconButton";
 
 const Stack = createNativeStackNavigator()
 const BottomTabs = createBottomTabNavigator()
@@ -17,9 +17,16 @@ export default function App() {
 
     function ExpensesOverview() {
         return (
-            <BottomTabs.Navigator screenOptions={bottomNavStyles.bottomNavigatorOpt}>
-                <BottomTabs.Screen name={"RecentExpenses"} component={RecentExpense} options={bottomNavStyles.recentExpenseScreenOpt}/>
-                <BottomTabs.Screen name={"AllExpenses"} component={AllExpenses} options={bottomNavStyles.allExpenseScreenOpt}/>
+            <BottomTabs.Navigator screenOptions={({navigation}) => ({
+                ...bottomNavStyles.bottomNavigatorOpt,
+                headerRight: ({tintColor}) =>
+                    <IconButton name={"add"} size={24} color={tintColor}
+                                onPress={() => navigation.navigate("ManageExpense")}/>
+            })}>
+                <BottomTabs.Screen name={"RecentExpenses"} component={RecentExpense}
+                                   options={bottomNavStyles.recentExpenseScreenOpt}/>
+                <BottomTabs.Screen name={"AllExpenses"} component={AllExpenses}
+                                   options={bottomNavStyles.allExpenseScreenOpt}/>
             </BottomTabs.Navigator>
         )
     }
@@ -29,10 +36,17 @@ export default function App() {
         <>
             <StatusBar style="light"/>
             <NavigationContainer>
-                <Stack.Navigator >
-                    <Stack.Screen name={"ExpensesOverview"} component={ExpensesOverview}
-                                  options={stackNavStyles.expenseOverView}/>
-                    <Stack.Screen name={"ManageExpense"} component={ManageExpenses}/>
+                <Stack.Navigator screenOptions={stackNavStyles.navContainerOptions}>
+                    <Stack.Screen
+                        name={"ExpensesOverview"}
+                        component={ExpensesOverview}
+                        options={stackNavStyles.expenseOverView}
+                    />
+                    <Stack.Screen
+                        name={"ManageExpense"}
+                        component={ManageExpenses}
+                        options={stackNavStyles.manageExpense}
+                    />
                 </Stack.Navigator>
             </NavigationContainer>
         </>
@@ -41,8 +55,15 @@ export default function App() {
 
 
 const stackNavStyles: Record<string, NativeStackNavigationOptions> = {
+    navContainerOptions: {
+        headerStyle: {backgroundColor: GlobalStyles.colors.primary500},
+        headerTintColor: "white"
+    },
     expenseOverView: {
         headerShown: false
+    },
+    manageExpense: {
+        presentation: "modal"
     }
 }
 

@@ -3,14 +3,26 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {ExpenseType} from "./ExpenseOutput";
 import {GlobalStyles} from "../../constants/colors";
 import {getFormattedDate} from "../../constants/util";
+import {ParamListBase, useNavigation} from "@react-navigation/native";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 
 interface ExpenseItemProps {
     expense: ExpenseType
 }
 
 export default function ExpenseItem(props: ExpenseItemProps) {
+
+    const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+    function expensePressHandler() {
+       navigation.navigate("ManageExpense")
+    }
+
+
     return (
-        <Pressable>
+        <Pressable
+            onPress={expensePressHandler}
+            style={({pressed}) => pressed && styles.pressed}
+        >
             <View style={styles.expenseItem}>
                 <View>
                     <Text style={[styles.textBase, styles.description]}>{props.expense.description}</Text>
@@ -59,6 +71,9 @@ const styles = StyleSheet.create({
     amount: {
         color: GlobalStyles.colors.primary500,
         fontWeight: "bold"
+    },
+    pressed: {
+        opacity: 0.5
     }
 
 })
