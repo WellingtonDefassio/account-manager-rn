@@ -4,12 +4,14 @@ import {ExpenseType} from "../components/expense/ExpenseOutput";
 import IconButton from "../components/ui/IconButton";
 import {GlobalStyles} from "../constants/colors";
 import ButtonCustom from "../components/ui/ButtonCustom";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {NavigationProp, ParamListBase} from "@react-navigation/native";
 
 
 interface ManageExpensesProps {
     expenseId: string
     route: { params: { expenseId: string } }
-    navigation: any
+    navigation: NavigationProp<ParamListBase>
 }
 
 export default function ManageExpenses(props: ManageExpensesProps) {
@@ -25,10 +27,16 @@ export default function ManageExpenses(props: ManageExpensesProps) {
 
     function deleteExpenseHandler() {
         console.log("DELETE!")
+        props.navigation.goBack()
     }
 
     function cancelExpenseHandler() {
-        console.log("CANCEL!!")
+        props.navigation.goBack()
+    }
+    function confirmExpenseHandler() {
+
+        console.log("Confirm!!")
+        props.navigation.goBack()
     }
 
     function renderTrash() {
@@ -45,7 +53,7 @@ export default function ManageExpenses(props: ManageExpensesProps) {
         <View style={styles.container}>
             <View style={styles.buttons}>
                 <ButtonCustom onPress={cancelExpenseHandler} mode={"flat"} style={styles.button}>Cancel</ButtonCustom>
-                <ButtonCustom onPress={cancelExpenseHandler} style={styles.button}>Confirm</ButtonCustom>
+                <ButtonCustom onPress={confirmExpenseHandler} style={styles.button}>Confirm</ButtonCustom>
             </View>
             {isEditing && renderTrash()}
         </View>
