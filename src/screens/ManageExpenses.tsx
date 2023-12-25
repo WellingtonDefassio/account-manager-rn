@@ -6,6 +6,7 @@ import ButtonCustom from "../components/ui/ButtonCustom";
 import {NavigationProp, ParamListBase} from "@react-navigation/native";
 import {useDispatch} from "react-redux";
 import {expenseActions, ExpenseType} from "../store/redux/slices/ExpenseSlice";
+import ExpenseForm from "../components/expense/form/ExpenseForm";
 
 
 interface ManageExpensesProps {
@@ -67,6 +68,7 @@ export default function ManageExpenses(props: ManageExpensesProps) {
 
     return (
         <View style={styles.container}>
+            <ExpenseForm />
             <View style={styles.buttons}>
                 <ButtonCustom onPress={cancelExpenseHandler} mode={"flat"} style={styles.button}>Cancel</ButtonCustom>
                 <ButtonCustom onPress={confirmExpenseHandler} style={styles.button}>Confirm</ButtonCustom>
