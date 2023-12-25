@@ -5,12 +5,13 @@ import {GlobalStyles} from "../constants/colors";
 import ButtonCustom from "../components/ui/ButtonCustom";
 import {NavigationProp, ParamListBase} from "@react-navigation/native";
 import {useDispatch} from "react-redux";
-import {expenseActions} from "../store/redux/slices/ExpenseSlice";
+import {expenseActions, ExpenseType} from "../store/redux/slices/ExpenseSlice";
 
 
 interface ManageExpensesProps {
     route: any
     navigation: NavigationProp<ParamListBase>
+    expense?: ExpenseType
 }
 
 export default function ManageExpenses(props: ManageExpensesProps) {
@@ -36,8 +37,21 @@ export default function ManageExpenses(props: ManageExpensesProps) {
     }
 
     function confirmExpenseHandler() {
+        if (isEditing) {
+            dispatch(expenseActions.updateExpense({
+                id: expenseId,
+                description: "Teste action descption",
+                amount: 999,
+                date: '2023-12-25'
+            }))
+        } else {
+            dispatch(expenseActions.addExpense({
+                description: "Teste action descption",
+                amount: 999,
+                date: '2023-12-25'
+            }))
+        }
 
-        console.log("Confirm!!")
         props.navigation.goBack()
     }
 

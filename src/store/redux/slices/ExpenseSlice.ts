@@ -88,13 +88,13 @@ const expenseSlice = createSlice({
                 id,
                 ...action.payload
             }
-            state.push(...state, newExpense)
+            state.push(newExpense)
         },
         deleteExpense: (state, action: PayloadAction<string>) => {
             return state.filter(expense => expense.id !== action.payload)
         },
         updateExpense: (state, action: PayloadAction<ExpenseType>) => {
-            state = state.map(expense => {
+            return state.map(expense => {
                 if (expense.id === action.payload.id) {
                     return action.payload
                 }
