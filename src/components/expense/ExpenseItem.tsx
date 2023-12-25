@@ -13,8 +13,11 @@ interface ExpenseItemProps {
 export default function ExpenseItem(props: ExpenseItemProps) {
 
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+
     function expensePressHandler() {
-       navigation.navigate("ManageExpense")
+        navigation.navigate("ManageExpense", {
+            expenseId: props.expense.id
+        })
     }
 
 
@@ -48,7 +51,7 @@ const styles = StyleSheet.create({
         elevation: 3,
         shadowColor: GlobalStyles.colors.gray500,
         shadowRadius: 4,
-        shadowOffset: {width:1, height: 1},
+        shadowOffset: {width: 1, height: 1},
         shadowOpacity: 0.4
     },
     textBase: {
