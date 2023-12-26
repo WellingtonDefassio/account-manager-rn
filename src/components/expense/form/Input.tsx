@@ -5,6 +5,7 @@ import {GlobalStyles} from "../../../constants/colors";
 interface InputForm {
     label: string
     textInputConfig?: TextInputProps
+    style?: any
 }
 
 export default function Input(props: InputForm) {
@@ -16,7 +17,7 @@ export default function Input(props: InputForm) {
 
 
     return (
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, props.style]}>
             <Text style={styles.label}>{props.label}</Text>
             <TextInput {...props.textInputConfig} style={inputStyles}/>
         </View>

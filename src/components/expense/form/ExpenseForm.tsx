@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Input from "./Input";
 import {ExpenseType} from "../../../store/redux/slices/ExpenseSlice";
 
@@ -15,24 +15,34 @@ export default function ExpenseForm() {
 
     const [expenseState, setExpenseState] = useState(initialState)
 
-    function setAmountHandler(amount: string){
+    function setAmountHandler(amount: string) {
         console.log(amount)
     }
-    function setDateHandler(date: string){
+
+    function setDateHandler(date: string) {
         console.log(date)
     }
 
     return (
-        <View>
-            <Input label={"Amount"} textInputConfig={{
-                keyboardType: "decimal-pad",
-                onChangeText: setAmountHandler
-            }}/>
-            <Input label={"Date"} textInputConfig={{
-                placeholder: "YYYY-MM-DD",
-                maxLength: 10,
-                onChangeText: setDateHandler
-            }}/>
+        <View style={styles.form}>
+            <Text style={styles.title}>Your Expense</Text>
+            <View style={styles.buttonsContainer}>
+                <Input
+                    label={"Amount"}
+                    style={styles.rowInput}
+                    textInputConfig={{
+                        keyboardType: "decimal-pad",
+                        onChangeText: setAmountHandler
+                    }}/>
+                <Input
+                    label={"Date"}
+                    style={styles.rowInput}
+                    textInputConfig={{
+                        placeholder: "YYYY-MM-DD",
+                        maxLength: 10,
+                        onChangeText: setDateHandler
+                    }}/>
+            </View>
             <Input label={"Description"} textInputConfig={{
                 multiline: true,
 
@@ -40,3 +50,23 @@ export default function ExpenseForm() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    form: {
+        marginTop: 40
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "white",
+        marginVertical: 24,
+        textAlign: "center"
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    rowInput: {
+        flex: 1
+    }
+})
