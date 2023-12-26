@@ -7,7 +7,7 @@ import {useDispatch} from "react-redux";
 import {expenseActions, ExpenseCreateType, ExpenseType, selectedExpenses} from "../store/redux/slices/ExpenseSlice";
 import ExpenseForm from "../components/expense/form/ExpenseForm";
 import {useAppSelector} from "../store/redux/hooks";
-import {storeExpense} from "../constants/http";
+import {deleteExpense, storeExpense, updateExpense} from "../constants/http";
 
 
 interface ManageExpensesProps {
@@ -31,8 +31,9 @@ export default function ManageExpenses(props: ManageExpensesProps) {
         })
     }, [props.navigation, isEditing]);
 
-    function deleteExpenseHandler() {
+    async function deleteExpenseHandler() {
         //todo delete expense firebase
+        await deleteExpense(expenseId)
         dispatch(expenseActions.deleteExpense(expenseId))
         props.navigation.goBack()
     }
@@ -44,6 +45,7 @@ export default function ManageExpenses(props: ManageExpensesProps) {
     async function confirmExpenseHandler(expense: ExpenseCreateType) {
         if (isEditing) {
             //todo update expense firebase
+            await updateExpense(expenseId, expense)
             dispatch(expenseActions.updateExpense({
                 id: expenseId,
                 ...expense

@@ -1,8 +1,8 @@
 import {ExpenseCreateType, ExpenseType} from "../store/redux/slices/ExpenseSlice";
 import axios from "axios";
 
-const BASE_URL = "https://react-native-course-e17a3-default-rtdb.firebaseio.com/"
-const EXPENSE_DOMAIN = "expenses"
+const BASE_URL = "https://react-native-course-e17a3-default-rtdb.firebaseio.com"
+const EXPENSE_DOMAIN = "/expenses"
 
 export async function storeExpense(expenseData: ExpenseCreateType): Promise<string> {
     const response = await axios.post(BASE_URL + EXPENSE_DOMAIN + ".json", expenseData);
@@ -23,3 +23,12 @@ export async function fetchExpense() {
     }
     return expenses;
 }
+
+export async function updateExpense(id: string, expenseData: ExpenseCreateType) {
+   return await axios.put(BASE_URL + EXPENSE_DOMAIN + `/${id}.json`, expenseData);
+}
+
+export async function deleteExpense(id: string) {
+ return  await axios.delete(BASE_URL + EXPENSE_DOMAIN + `/${id}.json`);
+}
+
