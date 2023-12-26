@@ -6,6 +6,7 @@ interface InputForm {
     label: string
     textInputConfig?: TextInputProps
     style?: any
+    valid: boolean
 }
 
 export default function Input(props: InputForm) {
@@ -14,11 +15,14 @@ export default function Input(props: InputForm) {
     if (props.textInputConfig?.multiline) {
         inputStyles.push(styles.inputMultiLine)
     }
+    if (!props.valid) {
+        inputStyles.push(styles.invalidInput)
+    }
 
 
     return (
         <View style={[styles.inputContainer, props.style]}>
-            <Text style={styles.label}>{props.label}</Text>
+            <Text style={[styles.label, !props.valid && styles.invalidLabel]}>{props.label}</Text>
             <TextInput {...props.textInputConfig} style={inputStyles}/>
         </View>
     );
@@ -44,5 +48,11 @@ const styles = StyleSheet.create({
     inputMultiLine: {
         minHeight: 100,
         textAlignVertical: 'top'
+    },
+    invalidLabel: {
+        color: GlobalStyles.colors.error500
+    },
+    invalidInput: {
+        backgroundColor: GlobalStyles.colors.error50
     }
 })

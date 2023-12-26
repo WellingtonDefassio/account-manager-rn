@@ -4,6 +4,7 @@ import Input from "./Input";
 import {ExpenseCreateType, ExpenseType} from "../../../store/redux/slices/ExpenseSlice";
 import ButtonCustom from "../../ui/ButtonCustom";
 import {getInvalidsField, hasInvalidField, validateExpenseValues, validDate} from "../../../constants/util";
+import {GlobalStyles} from "../../../constants/colors";
 
 
 interface ExpenseFormProps {
@@ -38,18 +39,21 @@ export default function ExpenseForm(props: ExpenseFormProps) {
     const [validateFields, setValidateFields] = useState(initialValidateState)
 
     function setAmountHandler(amount: string) {
+        setValidateFields({...validateFields, amount: true})
         setExpenseState((current) => {
             return {...current, amount: amount}
         })
     }
 
     function setDateHandler(date: string) {
+        setValidateFields({...validateFields, date: true})
         setExpenseState((current) => {
             return {...current, date: date}
         })
     }
 
     function setDescriptionHandler(description: string) {
+        setValidateFields({...validateFields, description: true})
         setExpenseState((current) => {
             return {...current, description: description}
         })
@@ -79,6 +83,7 @@ export default function ExpenseForm(props: ExpenseFormProps) {
                 <Input
                     label={"Amount"}
                     style={styles.rowInput}
+                    valid={validateFields.amount}
                     textInputConfig={{
                         keyboardType: "decimal-pad",
                         onChangeText: setAmountHandler,
@@ -87,6 +92,7 @@ export default function ExpenseForm(props: ExpenseFormProps) {
                 <Input
                     label={"Date"}
                     style={styles.rowInput}
+                    valid={validateFields.date}
                     textInputConfig={{
                         placeholder: "YYYY-MM-DD",
                         maxLength: 10,
@@ -94,12 +100,16 @@ export default function ExpenseForm(props: ExpenseFormProps) {
                         value: expenseState.date.toString()
                     }}/>
             </View>
-            <Input label={"Description"} textInputConfig={{
-                multiline: true,
-                onChangeText: setDescriptionHandler,
-                value: expenseState.description.toString()
-            }}/>
-            {formIsInvalid && <Text>Invalid input values - please check your entered data!!</Text>}
+            <Input
+                label={"Description"}
+                valid={validateFields.description}
+                textInputConfig={{
+                    multiline: true,
+                    onChangeText: setDescriptionHandler,
+                    value: expenseState.description.toString()
+                }}/>
+            {formIsInvalid &&
+                <Text style={styles.errorText}>Invalid input values - please check your entered data!!</Text>}
             <View style={styles.buttons}>
                 <ButtonCustom onPress={props.cancelExpenseHandler} mode={"flat"}
                               style={styles.button}>Cancel</ButtonCustom>
@@ -126,6 +136,11 @@ const styles = StyleSheet.create({
     },
     rowInput: {
         flex: 1
+    },
+    errorText: {
+        textAlign: "center",
+        color: GlobalStyles.colors.error500,
+        margin: 8
     },
     buttons: {
         flexDirection: "row",
