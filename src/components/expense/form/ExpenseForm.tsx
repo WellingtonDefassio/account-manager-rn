@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import Input from "./Input";
 import {ExpenseCreateType, ExpenseType} from "../../../store/redux/slices/ExpenseSlice";
 import ButtonCustom from "../../ui/ButtonCustom";
+import {validateExpenseValues} from "../../../constants/util";
 
 
 interface ExpenseFormProps {
@@ -53,6 +54,12 @@ export default function ExpenseForm(props: ExpenseFormProps) {
             date: expenseState.date,
             description: expenseState.description
         }
+
+        if(!validateExpenseValues(newExpense)) {
+            Alert.alert("Invalid input", "Please check your input values")
+            return;
+        }
+
         props.confirmExpenseHandler(newExpense)
     }
 
