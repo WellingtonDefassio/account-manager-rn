@@ -29,7 +29,7 @@ export default function ExpenseForm() {
                 onChangeText: setAmountHandler
             }}/>
             <Input label={"Date"} textInputConfig={{
-                placeholder: "date YYYY-MM-DD",
+                placeholder: "YYYY-MM-DD",
                 maxLength: 10,
                 onChangeText: setDateHandler
             }}/>
