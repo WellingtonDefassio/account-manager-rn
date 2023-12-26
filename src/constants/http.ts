@@ -4,14 +4,14 @@ import axios from "axios";
 const BASE_URL = "https://react-native-course-e17a3-default-rtdb.firebaseio.com/"
 const EXPENSE_DOMAIN = "expenses"
 
-export function storeExpense(expenseData: ExpenseCreateType) {
-    axios.post(BASE_URL + EXPENSE_DOMAIN + ".json", expenseData)
+export async function storeExpense(expenseData: ExpenseCreateType): Promise<string> {
+    const response = await axios.post(BASE_URL + EXPENSE_DOMAIN + ".json", expenseData);
+    return response.data.name
 }
 
 export async function fetchExpense() {
     const response = await axios.get(BASE_URL + EXPENSE_DOMAIN + ".json");
     const expenses = [];
-    console.log(response.data)
     for (const key in response.data) {
         const expenseObj: ExpenseType = {
             id: key,

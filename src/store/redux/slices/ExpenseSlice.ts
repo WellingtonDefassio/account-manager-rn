@@ -17,12 +17,10 @@ export type ExpenseCreateType = {
 
 const expenseSlice = createSlice({
     name: "expense",
-    initialState : [] as ExpenseType[],
+    initialState: [] as ExpenseType[],
     reducers: {
-        addExpense: (state, action: PayloadAction<ExpenseCreateType>) => {
-            const id = new Date().toString() + Math.random().toString()
+        addExpense: (state, action: PayloadAction<ExpenseType>) => {
             const newExpense: ExpenseType = {
-                id,
                 ...action.payload
             }
             state.push(newExpense)
@@ -31,7 +29,7 @@ const expenseSlice = createSlice({
             return state.filter(expense => expense.id !== action.payload)
         },
         setAllExpenses: (state, action: PayloadAction<ExpenseType[]>) => {
-            return action.payload
+            return action.payload.reverse()
         },
         updateExpense: (state, action: PayloadAction<ExpenseType>) => {
             return state.map(expense => {

@@ -41,7 +41,7 @@ export default function ManageExpenses(props: ManageExpensesProps) {
         props.navigation.goBack()
     }
 
-    function confirmExpenseHandler(expense: ExpenseCreateType) {
+    async function confirmExpenseHandler(expense: ExpenseCreateType) {
         if (isEditing) {
             //todo update expense firebase
             dispatch(expenseActions.updateExpense({
@@ -49,8 +49,9 @@ export default function ManageExpenses(props: ManageExpensesProps) {
                 ...expense
             }))
         } else {
-            storeExpense(expense)
-            dispatch(expenseActions.addExpense(expense))
+            //todo create
+            const id = await storeExpense(expense);
+            dispatch(expenseActions.addExpense({...expense, id}))
         }
 
         props.navigation.goBack()
