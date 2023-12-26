@@ -26,6 +26,12 @@ export function validateExpenseValues(expense: ExpenseCreateType): boolean {
 
 }
 
+interface FieldsValidate {
+    amount: boolean,
+    date: boolean,
+    description: boolean
+}
+
 export function getInvalidsField(expense: ExpenseCreateType) {
     let validateFields = {
         amount: true,
@@ -42,4 +48,8 @@ export function getInvalidsField(expense: ExpenseCreateType) {
         validateFields.description = false
     }
     return validateFields;
+}
+
+export function hasInvalidField(validateFields: FieldsValidate) {
+  return !validateFields.amount || !validateFields.date || !validateFields.description
 }

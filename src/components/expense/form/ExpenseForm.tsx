@@ -3,7 +3,7 @@ import {Alert, StyleSheet, Text, View} from 'react-native';
 import Input from "./Input";
 import {ExpenseCreateType, ExpenseType} from "../../../store/redux/slices/ExpenseSlice";
 import ButtonCustom from "../../ui/ButtonCustom";
-import {getInvalidsField, validateExpenseValues, validDate} from "../../../constants/util";
+import {getInvalidsField, hasInvalidField, validateExpenseValues, validDate} from "../../../constants/util";
 
 
 interface ExpenseFormProps {
@@ -70,7 +70,7 @@ export default function ExpenseForm(props: ExpenseFormProps) {
         props.confirmExpenseHandler(newExpense)
     }
 
-    const formIsInvalid = !validateFields.amount || !validateFields.date || !validateFields.description
+    const formIsInvalid = hasInvalidField(validateFields)
 
     return (
         <View style={styles.form}>
