@@ -2,7 +2,13 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Input from "./Input";
 import {ExpenseType} from "../../../store/redux/slices/ExpenseSlice";
+import ButtonCustom from "../../ui/ButtonCustom";
 
+
+interface ExpenseFormProps {
+    confirmExpenseHandler: () => void
+    cancelExpenseHandler: () => void
+}
 
 const initialState: ExpenseType = {
     id: "",
@@ -11,16 +17,27 @@ const initialState: ExpenseType = {
     description: ""
 }
 
-export default function ExpenseForm() {
+export default function ExpenseForm(props: ExpenseFormProps) {
 
     const [expenseState, setExpenseState] = useState(initialState)
 
     function setAmountHandler(amount: string) {
-        console.log(amount)
+        let number = parseFloat(amount);
+        setExpenseState((current) => {
+            return {...current, amount: number}
+        })
     }
 
     function setDateHandler(date: string) {
-        console.log(date)
+        setExpenseState((current) => {
+            return {...current, date: date}
+        })
+    }
+
+    function setDescriptionHandler(description: string) {
+        setExpenseState((current) => {
+            return {...current, description: description}
+        })
     }
 
     return (
@@ -32,7 +49,8 @@ export default function ExpenseForm() {
                     style={styles.rowInput}
                     textInputConfig={{
                         keyboardType: "decimal-pad",
-                        onChangeText: setAmountHandler
+                        onChangeText: setAmountHandler,
+                        value: expenseState.amount.toString()
                     }}/>
                 <Input
                     label={"Date"}
@@ -40,13 +58,19 @@ export default function ExpenseForm() {
                     textInputConfig={{
                         placeholder: "YYYY-MM-DD",
                         maxLength: 10,
-                        onChangeText: setDateHandler
+                        onChangeText: setDateHandler,
+                        value: expenseState.date.toString()
                     }}/>
             </View>
             <Input label={"Description"} textInputConfig={{
                 multiline: true,
-
+                onChangeText: setDescriptionHandler,
+                value: expenseState.description.toString()
             }}/>
+            <View style={styles.buttons}>
+                <ButtonCustom onPress={props.cancelExpenseHandler} mode={"flat"} style={styles.button}>Cancel</ButtonCustom>
+                <ButtonCustom onPress={props.confirmExpenseHandler} style={styles.button}>Confirm</ButtonCustom>
+            </View>
         </View>
     );
 }
@@ -68,5 +92,14 @@ const styles = StyleSheet.create({
     },
     rowInput: {
         flex: 1
-    }
+    },
+    buttons: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    button: {
+        minWidth: 120,
+        marginHorizontal: 8
+    },
 })

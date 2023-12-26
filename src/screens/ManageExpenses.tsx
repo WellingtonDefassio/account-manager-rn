@@ -68,11 +68,7 @@ export default function ManageExpenses(props: ManageExpensesProps) {
 
     return (
         <View style={styles.container}>
-            <ExpenseForm />
-            <View style={styles.buttons}>
-                <ButtonCustom onPress={cancelExpenseHandler} mode={"flat"} style={styles.button}>Cancel</ButtonCustom>
-                <ButtonCustom onPress={confirmExpenseHandler} style={styles.button}>Confirm</ButtonCustom>
-            </View>
+            <ExpenseForm confirmExpenseHandler={confirmExpenseHandler} cancelExpenseHandler={cancelExpenseHandler}/>
             {isEditing && renderTrash()}
         </View>
     );
@@ -84,15 +80,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 24,
         backgroundColor: GlobalStyles.colors.primary800
-    },
-    buttons: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    button: {
-        minWidth: 120,
-        marginHorizontal: 8
     },
     deleteContainer: {
         marginTop: 16,
