@@ -14,7 +14,7 @@ export default function RecentExpense() {
     const recentExpenses = expensesSelected.filter((expense) => {
         const expenseDate = new Date(expense.date);
         const days7DaysAgo = getDateMinusDays(today, 7)
-        return (expenseDate > days7DaysAgo) && (expenseDate <= today)
+        return (expenseDate >= days7DaysAgo) && (expenseDate <= today)
     });
 
     return (

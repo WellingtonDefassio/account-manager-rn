@@ -1,30 +1,37 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Input from "./Input";
-import {ExpenseType} from "../../../store/redux/slices/ExpenseSlice";
+import {ExpenseCreateType, ExpenseType} from "../../../store/redux/slices/ExpenseSlice";
 import ButtonCustom from "../../ui/ButtonCustom";
 
 
 interface ExpenseFormProps {
-    confirmExpenseHandler: () => void
+    confirmExpenseHandler: (newExpense : ExpenseCreateType) => void
     cancelExpenseHandler: () => void
+    defaultValue: ExpenseType | undefined
 }
 
-const initialState: ExpenseType = {
+export type ExpenseTypeState = {
+    id: string,
+    description: string,
+    amount: string,
+    date: string
+}
+
+const initialState: ExpenseTypeState = {
     id: "",
-    amount: 0,
+    amount: "",
     date: "",
     description: ""
 }
 
 export default function ExpenseForm(props: ExpenseFormProps) {
 
-    const [expenseState, setExpenseState] = useState(initialState)
+    const [expenseState, setExpenseState] = useState(props.defaultValue ?? initialState)
 
     function setAmountHandler(amount: string) {
-        let number = parseFloat(amount);
         setExpenseState((current) => {
-            return {...current, amount: number}
+            return {...current, amount: amount}
         })
     }
 
@@ -38,6 +45,15 @@ export default function ExpenseForm(props: ExpenseFormProps) {
         setExpenseState((current) => {
             return {...current, description: description}
         })
+    }
+
+    function submitHandler() {
+        const newExpense: ExpenseCreateType = {
+            amount: +expenseState.amount,
+            date: expenseState.date,
+            description: expenseState.description
+        }
+        props.confirmExpenseHandler(newExpense)
     }
 
     return (
@@ -68,8 +84,9 @@ export default function ExpenseForm(props: ExpenseFormProps) {
                 value: expenseState.description.toString()
             }}/>
             <View style={styles.buttons}>
-                <ButtonCustom onPress={props.cancelExpenseHandler} mode={"flat"} style={styles.button}>Cancel</ButtonCustom>
-                <ButtonCustom onPress={props.confirmExpenseHandler} style={styles.button}>Confirm</ButtonCustom>
+                <ButtonCustom onPress={props.cancelExpenseHandler} mode={"flat"}
+                              style={styles.button}>Cancel</ButtonCustom>
+                <ButtonCustom onPress={submitHandler} style={styles.button}>Confirm</ButtonCustom>
             </View>
         </View>
     );

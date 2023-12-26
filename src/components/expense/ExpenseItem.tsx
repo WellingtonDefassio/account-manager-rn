@@ -1,7 +1,6 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {GlobalStyles} from "../../constants/colors";
-import {getFormattedDate} from "../../constants/util";
 import {ParamListBase, useNavigation} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {ExpenseType} from "../../store/redux/slices/ExpenseSlice";

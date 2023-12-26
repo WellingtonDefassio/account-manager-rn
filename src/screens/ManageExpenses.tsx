@@ -4,9 +4,10 @@ import IconButton from "../components/ui/IconButton";
 import {GlobalStyles} from "../constants/colors";
 import ButtonCustom from "../components/ui/ButtonCustom";
 import {NavigationProp, ParamListBase} from "@react-navigation/native";
-import {useDispatch} from "react-redux";
-import {expenseActions, ExpenseType} from "../store/redux/slices/ExpenseSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {expenseActions, ExpenseCreateType, ExpenseType, selectedExpenses} from "../store/redux/slices/ExpenseSlice";
 import ExpenseForm from "../components/expense/form/ExpenseForm";
+import {useAppSelector} from "../store/redux/hooks";
 
 
 interface ManageExpensesProps {
@@ -21,6 +22,8 @@ export default function ManageExpenses(props: ManageExpensesProps) {
     const isEditing = !!expenseId
 
     const dispatch = useDispatch()
+
+    const expenseSelected = useAppSelector(selectedExpenses).find(expense => expense.id === expenseId)
 
     useLayoutEffect(() => {
         props.navigation.setOptions({
@@ -37,20 +40,15 @@ export default function ManageExpenses(props: ManageExpensesProps) {
         props.navigation.goBack()
     }
 
-    function confirmExpenseHandler() {
+    function confirmExpenseHandler(expense: ExpenseCreateType) {
         if (isEditing) {
+
             dispatch(expenseActions.updateExpense({
                 id: expenseId,
-                description: "Teste action descption",
-                amount: 999,
-                date: '2023-12-25'
+                ...expense
             }))
         } else {
-            dispatch(expenseActions.addExpense({
-                description: "Teste action descption",
-                amount: 999,
-                date: '2023-12-25'
-            }))
+            dispatch(expenseActions.addExpense(expense))
         }
 
         props.navigation.goBack()
@@ -68,7 +66,11 @@ export default function ManageExpenses(props: ManageExpensesProps) {
 
     return (
         <View style={styles.container}>
-            <ExpenseForm confirmExpenseHandler={confirmExpenseHandler} cancelExpenseHandler={cancelExpenseHandler}/>
+            <ExpenseForm
+                confirmExpenseHandler={confirmExpenseHandler}
+                cancelExpenseHandler={cancelExpenseHandler}
+                defaultValue={expenseSelected}
+            />
             {isEditing && renderTrash()}
         </View>
     );
