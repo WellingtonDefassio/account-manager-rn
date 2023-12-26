@@ -3,11 +3,11 @@ import {Alert, StyleSheet, Text, View} from 'react-native';
 import Input from "./Input";
 import {ExpenseCreateType, ExpenseType} from "../../../store/redux/slices/ExpenseSlice";
 import ButtonCustom from "../../ui/ButtonCustom";
-import {validateExpenseValues} from "../../../constants/util";
+import {getInvalidsField, validateExpenseValues, validDate} from "../../../constants/util";
 
 
 interface ExpenseFormProps {
-    confirmExpenseHandler: (newExpense : ExpenseCreateType) => void
+    confirmExpenseHandler: (newExpense: ExpenseCreateType) => void
     cancelExpenseHandler: () => void
     defaultValue: ExpenseType | undefined
 }
@@ -26,9 +26,16 @@ const initialState: ExpenseTypeState = {
     description: ""
 }
 
+const initialValidateState = {
+    amount: true,
+    date: true,
+    description: true
+}
+
 export default function ExpenseForm(props: ExpenseFormProps) {
 
     const [expenseState, setExpenseState] = useState(props.defaultValue ?? initialState)
+    const [validateFields, setValidateFields] = useState(initialValidateState)
 
     function setAmountHandler(amount: string) {
         setExpenseState((current) => {
@@ -55,13 +62,15 @@ export default function ExpenseForm(props: ExpenseFormProps) {
             description: expenseState.description
         }
 
-        if(!validateExpenseValues(newExpense)) {
-            Alert.alert("Invalid input", "Please check your input values")
+        if (!validateExpenseValues(newExpense)) {
+            setValidateFields(getInvalidsField(newExpense))
             return;
         }
 
         props.confirmExpenseHandler(newExpense)
     }
+
+    const formIsInvalid = !validateFields.amount || !validateFields.date || !validateFields.description
 
     return (
         <View style={styles.form}>
@@ -90,6 +99,7 @@ export default function ExpenseForm(props: ExpenseFormProps) {
                 onChangeText: setDescriptionHandler,
                 value: expenseState.description.toString()
             }}/>
+            {formIsInvalid && <Text>Invalid input values - please check your entered data!!</Text>}
             <View style={styles.buttons}>
                 <ButtonCustom onPress={props.cancelExpenseHandler} mode={"flat"}
                               style={styles.button}>Cancel</ButtonCustom>

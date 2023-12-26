@@ -25,3 +25,21 @@ export function validateExpenseValues(expense: ExpenseCreateType): boolean {
     return !(!validAmount(expense.amount) || !validDate(expense.date) || !validDescription(expense.description));
 
 }
+
+export function getInvalidsField(expense: ExpenseCreateType) {
+    let validateFields = {
+        amount: true,
+        date: true,
+        description: true
+    }
+    if (!validAmount(expense.amount)) {
+        validateFields.amount = false
+    }
+    if (!validDate(expense.date)) {
+        validateFields.date = false
+    }
+    if (!validDescription(expense.description)) {
+        validateFields.description = false
+    }
+    return validateFields;
+}
