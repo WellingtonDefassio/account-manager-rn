@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import IconButton from "../components/ui/IconButton";
 import {GlobalStyles} from "../constants/colors";
@@ -8,6 +8,7 @@ import {expenseActions, ExpenseCreateType, ExpenseType, selectedExpenses} from "
 import ExpenseForm from "../components/expense/form/ExpenseForm";
 import {useAppSelector} from "../store/redux/hooks";
 import {deleteExpense, storeExpense, updateExpense} from "../constants/http";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
 
 
 interface ManageExpensesProps {
@@ -25,6 +26,8 @@ export default function ManageExpenses(props: ManageExpensesProps) {
 
     const expenseSelected = useAppSelector(selectedExpenses).find(expense => expense.id === expenseId)
 
+    const [loading, setLoading] = useState(false)
+
     useLayoutEffect(() => {
         props.navigation.setOptions({
             title: isEditing ? "Edit Expense" : "Add Expense"
@@ -32,9 +35,11 @@ export default function ManageExpenses(props: ManageExpensesProps) {
     }, [props.navigation, isEditing]);
 
     async function deleteExpenseHandler() {
+        setLoading(true)
         //todo delete expense firebase
         await deleteExpense(expenseId)
         dispatch(expenseActions.deleteExpense(expenseId))
+        setLoading(false)
         props.navigation.goBack()
     }
 
@@ -45,6 +50,7 @@ export default function ManageExpenses(props: ManageExpensesProps) {
     async function confirmExpenseHandler(expense: ExpenseCreateType) {
         if (isEditing) {
             //todo update expense firebase
+            setLoading(true)
             await updateExpense(expenseId, expense)
             dispatch(expenseActions.updateExpense({
                 id: expenseId,
@@ -52,10 +58,11 @@ export default function ManageExpenses(props: ManageExpensesProps) {
             }))
         } else {
             //todo create
+            setLoading(true)
             const id = await storeExpense(expense);
             dispatch(expenseActions.addExpense({...expense, id}))
         }
-
+        setLoading(false)
         props.navigation.goBack()
     }
 
@@ -69,15 +76,27 @@ export default function ManageExpenses(props: ManageExpensesProps) {
         )
     }
 
+    function isLoading() {
+        return loading ? <LoadingOverlay/> : null
+    }
+
+    function renderExpenseForm() {
+        return (
+            <View style={styles.container}>
+                <ExpenseForm
+                    confirmExpenseHandler={confirmExpenseHandler}
+                    cancelExpenseHandler={cancelExpenseHandler}
+                    defaultValue={expenseSelected}
+                />
+                {isEditing && renderTrash()}
+            </View>
+        )
+    }
+
     return (
-        <View style={styles.container}>
-            <ExpenseForm
-                confirmExpenseHandler={confirmExpenseHandler}
-                cancelExpenseHandler={cancelExpenseHandler}
-                defaultValue={expenseSelected}
-            />
-            {isEditing && renderTrash()}
-        </View>
+        <>
+            {isLoading() || renderExpenseForm()}
+        </>
     );
 }
 

@@ -6,8 +6,11 @@ import {expenseActions, ExpenseType, selectedExpenses} from "../store/redux/slic
 import {getDateMinusDays} from "../constants/util";
 import {fetchExpense} from "../constants/http";
 import {useDispatch} from "react-redux";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
 
 export default function RecentExpense() {
+
+    const [loading, setLoading] = useState(true)
 
     const expensesSelected = useAppSelector(selectedExpenses);
     const dispatch = useDispatch();
@@ -15,9 +18,12 @@ export default function RecentExpense() {
 
     useEffect(() => {
         async function getExpenses() {
+            setLoading(true)
             const expenses = await fetchExpense();
             dispatch(expenseActions.setAllExpenses(expenses))
+            setLoading(false)
         }
+
         getExpenses();
     }, []);
 
@@ -29,11 +35,24 @@ export default function RecentExpense() {
         return (expenseDate >= days7DaysAgo) && (expenseDate <= today)
     });
 
+    function isLoading() {
+        return loading ? <LoadingOverlay/> : null
+    }
+
+    function renderExpenseOutput() {
+        return (
+            <ExpenseOutput
+                expenses={recentExpenses}
+                periodName={"Last 7 Days"}
+                fallbackText={"No expenses registered for the last 7 days."}
+            />
+        )
+    }
+
     return (
-        <ExpenseOutput
-            expenses={recentExpenses}
-            periodName={"Last 7 Days"}
-            fallbackText={"No expenses registered for the last 7 days."}
-        />
+        <>
+            {isLoading() || renderExpenseOutput()}
+        </>
+
     );
 }
