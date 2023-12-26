@@ -1,13 +1,25 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import ExpenseOutput from "../components/expense/ExpenseOutput";
 import {useAppSelector} from "../store/redux/hooks";
-import {selectedExpenses} from "../store/redux/slices/ExpenseSlice";
+import {expenseActions, ExpenseType, selectedExpenses} from "../store/redux/slices/ExpenseSlice";
 import {getDateMinusDays} from "../constants/util";
+import {fetchExpense} from "../constants/http";
+import {useDispatch} from "react-redux";
 
 export default function RecentExpense() {
 
     const expensesSelected = useAppSelector(selectedExpenses);
+    const dispatch = useDispatch();
+
+
+    useEffect(() => {
+        async function getExpenses() {
+            const expenses = await fetchExpense();
+            dispatch(expenseActions.setAllExpenses(expenses))
+        }
+        getExpenses();
+    }, []);
 
     const today = new Date();
 
