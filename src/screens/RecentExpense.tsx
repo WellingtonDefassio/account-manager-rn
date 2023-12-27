@@ -7,10 +7,12 @@ import {getDateMinusDays} from "../constants/util";
 import {fetchExpense} from "../constants/http";
 import {useDispatch} from "react-redux";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
 
 export default function RecentExpense() {
 
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<{ message: string, state: boolean }>({state: false, message: ""})
 
     const expensesSelected = useAppSelector(selectedExpenses);
     const dispatch = useDispatch();
@@ -19,9 +21,15 @@ export default function RecentExpense() {
     useEffect(() => {
         async function getExpenses() {
             setLoading(true)
-            const expenses = await fetchExpense();
-            dispatch(expenseActions.setAllExpenses(expenses))
-            setLoading(false)
+            try {
+                const expenses = await fetchExpense();
+                dispatch(expenseActions.setAllExpenses(expenses))
+            } catch (e) {
+                setError({message: "Could not fetch expenses!", state: true})
+            } finally {
+                setLoading(false)
+            }
+
         }
 
         getExpenses();
@@ -34,6 +42,14 @@ export default function RecentExpense() {
         const days7DaysAgo = getDateMinusDays(today, 7)
         return (expenseDate >= days7DaysAgo) && (expenseDate <= today)
     });
+
+    function resetErrorState() {
+        setError({state: false, message: ""})
+    }
+
+    function hasError() {
+        return error.state ? <ErrorOverlay message={error.message} onConfirm={resetErrorState}/> : null
+    }
 
     function isLoading() {
         return loading ? <LoadingOverlay/> : null
@@ -51,7 +67,7 @@ export default function RecentExpense() {
 
     return (
         <>
-            {isLoading() || renderExpenseOutput()}
+            {hasError() || isLoading() || renderExpenseOutput()}
         </>
 
     );

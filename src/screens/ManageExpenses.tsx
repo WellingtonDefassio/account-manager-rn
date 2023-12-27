@@ -9,6 +9,7 @@ import ExpenseForm from "../components/expense/form/ExpenseForm";
 import {useAppSelector} from "../store/redux/hooks";
 import {deleteExpense, storeExpense, updateExpense} from "../constants/http";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
 
 
 interface ManageExpensesProps {
@@ -27,6 +28,7 @@ export default function ManageExpenses(props: ManageExpensesProps) {
     const expenseSelected = useAppSelector(selectedExpenses).find(expense => expense.id === expenseId)
 
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<{ message: string, state: boolean }>({state: false, message: ""})
 
     useLayoutEffect(() => {
         props.navigation.setOptions({
@@ -35,12 +37,16 @@ export default function ManageExpenses(props: ManageExpensesProps) {
     }, [props.navigation, isEditing]);
 
     async function deleteExpenseHandler() {
-        setLoading(true)
-        //todo delete expense firebase
-        await deleteExpense(expenseId)
-        dispatch(expenseActions.deleteExpense(expenseId))
-        setLoading(false)
-        props.navigation.goBack()
+        try {
+            setLoading(true)
+            await deleteExpense(expenseId)
+            dispatch(expenseActions.deleteExpense(expenseId))
+            props.navigation.goBack()
+        } catch (e) {
+            setError({state: true, message: "Error trying to delete expense with id : " + expenseId})
+        } finally {
+            setLoading(false)
+        }
     }
 
     function cancelExpenseHandler() {
@@ -48,22 +54,27 @@ export default function ManageExpenses(props: ManageExpensesProps) {
     }
 
     async function confirmExpenseHandler(expense: ExpenseCreateType) {
-        if (isEditing) {
-            //todo update expense firebase
-            setLoading(true)
-            await updateExpense(expenseId, expense)
-            dispatch(expenseActions.updateExpense({
-                id: expenseId,
-                ...expense
-            }))
-        } else {
-            //todo create
-            setLoading(true)
-            const id = await storeExpense(expense);
-            dispatch(expenseActions.addExpense({...expense, id}))
+
+        try {
+            if (isEditing) {
+                setLoading(true)
+                await updateExpense(expenseId, expense)
+                dispatch(expenseActions.updateExpense({
+                    id: expenseId,
+                    ...expense
+                }))
+                props.navigation.goBack()
+            } else {
+                setLoading(true)
+                const id = await storeExpense(expense);
+                dispatch(expenseActions.addExpense({...expense, id}))
+                props.navigation.goBack()
+            }
+        } catch (e) {
+            setError({state: true, message: "Error trying create/update expense"})
+        } finally {
+            setLoading(false)
         }
-        setLoading(false)
-        props.navigation.goBack()
     }
 
     function renderTrash() {
@@ -93,9 +104,19 @@ export default function ManageExpenses(props: ManageExpensesProps) {
         )
     }
 
+    function resetErrorState() {
+        setError({state: false, message: ""})
+        props.navigation.goBack()
+    }
+
+    function hasError() {
+        return error.state ? <ErrorOverlay message={error.message} onConfirm={resetErrorState}/> : null
+    }
+
+
     return (
         <>
-            {isLoading() || renderExpenseForm()}
+            {hasError() || isLoading() || renderExpenseForm()}
         </>
     );
 }
